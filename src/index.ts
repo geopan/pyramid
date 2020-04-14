@@ -1,7 +1,6 @@
 import mkdirp from "mkdirp"
-import tiler, { PyramidOptions } from "./tiler"
+import tiler, { PyramidOptions, initZoomToDisplay } from "./tiler"
 
-const sizeOf = require("image-size");
 const rimraf = require("rimraf");
 
 const createTiles = async (options: PyramidOptions) => {
@@ -9,16 +8,6 @@ const createTiles = async (options: PyramidOptions) => {
   const tileSize = options.tileSize || 256;
   const tmpDir = options.tmpDir || process.env.TMPDIR || "/tmp";
   const tempDir = `${tmpDir}/pyramid_tiler_${process.pid}`;
-
-  let zoomToDisplay = 0
-
-  const size = sizeOf(options.inPath);
-  const halvingsWidth = Math.ceil(Math.log2(Math.ceil(size.width / tileSize)));
-  const halvingsheight = Math.ceil(
-    Math.log2(Math.ceil(size.height / tileSize))
-  );
-
-  zoomToDisplay = Math.max(halvingsWidth, halvingsheight)
 
   try {
 
@@ -31,7 +20,7 @@ const createTiles = async (options: PyramidOptions) => {
         zoom: 0,
         tmpDir,
         tempDir,
-        zoomToDisplay,
+        zoomToDisplay: initZoomToDisplay(options.inPath, tileSize),
         quality: options.quality || 100
       }
     )

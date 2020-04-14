@@ -50,6 +50,16 @@ export function decomposePattern(pattern: string, zoom: number = 0, tileSize: nu
   }
 }
 
+export function initZoomToDisplay(image: string, tileSize: number = 256) {
+  const size = sizeOf(image);
+  const halvingsWidth = Math.ceil(Math.log2(Math.ceil(size.width / tileSize)));
+  const halvingsheight = Math.ceil(
+    Math.log2(Math.ceil(size.height / tileSize))
+  );
+
+  return Math.max(halvingsWidth, halvingsheight)
+}
+
 // create tiles for a given image at a given zoom level
 async function level(options: TilerOptions): Promise<void> {
 
