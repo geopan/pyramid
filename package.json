@@ -1,22 +1,22 @@
 {
   "name": "@geopan.io/pyramid",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "pyramid": "lib/bin/index.js"
+    "pyramid": "bin/index.js"
   },
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "prepublish": "npm run build",
     "build": "tsc",
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/bin/index.ts",
     "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "commander": "^5.0.0",
     "image-size": "^0.8.3",
     "mkdirp": "^1.0.4",
     "rimraf": "^3.0.2"
