@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import createTiles from "..";
+const Pyramid = require("../lib/Pyramid").default;
 
 const program = require("commander");
 
@@ -12,9 +12,9 @@ program
     "-p, --pattern <pattern>",
     "output pattern. Default is {z}/{x}_{y}.{format}"
   )
-  .action(async (image: string, output: string, cmdObj: any) => {
+  .action(async (image, output, cmdObj) => {
     const pattern = cmdObj.pattern || "{z}/{x}_{y}.jpg";
-    await createTiles({ inPath: image, outPath: output, pattern });
+    await Pyramid.create({ inPath: image, outPath: output, pattern });
   })
   .parse(process.argv);
 

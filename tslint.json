@@ -3,9 +3,12 @@
   "extends": [
     "tslint:recommended"
   ],
-  "jsRules": {},
+  "jsRules": {
+
+  },
   "rules": {
-    "trailing-comma": [false]
+    "trailing-comma": [false],
+    "no-console": ["error"]
   },
   "rulesDirectory": []
 }
