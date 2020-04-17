@@ -54,13 +54,15 @@ pyramid -h
 
 # Return
 
-Usage: index [options] <image>
+Usage: pyramid [options] <image>
 
 Create a pyramid of tiles from an image
 
 Options:
-  -V, --version            output the version number
-  -p, --pattern <pattern>  output pattern. Default is {z}/{x}_{y}.{format}
-  -o, --output <output>    destination folder. Default is ./{image}_tiles
-  -h, --help               display help for command
+  -V, --version              output the version number
+  -p, --pattern <pattern>    output pattern. Default is {z}/{x}_{y}.{format}
+  -o, --output <output>      destination folder. Default is ./{image}_tiles
+  -q, --quality <quality>    compression level. Default is 100
+  -t, --tilesize <tilesize>  tile size. Default is 256px
+  -h, --help                 display help for command
 ```

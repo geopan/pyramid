@@ -15,6 +15,8 @@ program
     "-o, --output <output>",
     "destination folder. Default is ./{image}_tiles"
   )
+  .option("-q, --quality <quality>", "compression level. Default is 100")
+  .option("-t, --tilesize <tilesize>", "tile size. Default is 256px")
   .action(async (image, cmdObj) => {
     const pattern = cmdObj.pattern || "{z}/{x}_{y}.jpg";
     const output =
@@ -23,7 +25,15 @@ program
         image,
         path.extname(image)
       )}_tiles`;
-    await Pyramid.create({ inPath: image, outPath: output, pattern });
+    const quality = cmdObj.quality || 100;
+    const tileSize = cmdObj.tilesize || 256;
+    await Pyramid.create({
+      inPath: image,
+      outPath: output,
+      pattern,
+      quality,
+      tileSize,
+    });
   })
   .parse(process.argv);
 
