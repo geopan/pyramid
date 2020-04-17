@@ -13,7 +13,7 @@ Two options came to my mind when starting this challenge:
 
 The command `gdal2tiles.py -p raster <image>` creates a 256x256 pyramid following the OSGeo Tile Map Service Specification, which is the opposite of the projection expected (x,y origin in the bottom left corner instead of top left).
 
-On the other hand, I have found a couple of packages on NPM that acheived a similar result using ImageMagick and decided to use the same aproach as [image-tiler](https://www.npmjs.com/package/image-tiler) which is essentially a node wrapper around imagemagick's convert command. The package is actually broken because of the [mkdirp-promise](https://www.npmjs.com/package/mkdirp-promise) dependency so I have written my own in typescript :yum:
+On the other hand, I have found a couple of packages on NPM that acheived a similar result using ImageMagick and decided to use the same aproach as [image-tiler](https://www.npmjs.com/package/image-tiler) which is essentially a node wrapper around imagemagick's convert command. The package is actually broken because of the [mkdirp-promise](https://www.npmjs.com/package/mkdirp-promise) dependency so I have written my own in typescript.
 
 Finally, I am using the popular [commander](https://github.com/tj/commander.js#readme) package to wrap the result in a cli. I have also added a couple of tests with [jest](https://jestjs.io/). With more time, I would aim for 100% code coverage.
 
