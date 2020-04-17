@@ -1,6 +1,6 @@
 {
   "name": "@geopan.io/pyramid",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "prepublish": "npm run build",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest --clearCache && jest"
   },
   "author": "",
   "license": "ISC",

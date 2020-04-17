@@ -18,7 +18,11 @@ program
   .action(async (image, cmdObj) => {
     const pattern = cmdObj.pattern || "{z}/{x}_{y}.jpg";
     const output =
-      cmdObj.output || `${path.basename(image, path.extname(image))}_tiles`;
+      cmdObj.output ||
+      `${path.dirname(image)}/${path.basename(
+        image,
+        path.extname(image)
+      )}_tiles`;
     await Pyramid.create({ inPath: image, outPath: output, pattern });
   })
   .parse(process.argv);
