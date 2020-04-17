@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 const path = require("path");
+const pjson = require("../package.json");
 const program = require("commander");
 const Pyramid = require("../lib/Pyramid").default;
 
 program
-  .version("0.1.0")
+  .version(pjson.version)
   .description("Create a pyramid of tiles from an image")
   .arguments("<image>")
   .option(
