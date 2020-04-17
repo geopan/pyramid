@@ -1,19 +1,24 @@
 #!/usr/bin/env node
-
-const Pyramid = require("../lib/Pyramid").default;
-
+const path = require("path");
 const program = require("commander");
+const Pyramid = require("../lib/Pyramid").default;
 
 program
   .version("0.1.0")
   .description("Create a pyramid of tiles from an image")
-  .arguments("<image> <output>")
+  .arguments("<image>")
   .option(
     "-p, --pattern <pattern>",
     "output pattern. Default is {z}/{x}_{y}.{format}"
   )
-  .action(async (image, output, cmdObj) => {
+  .option(
+    "-o, --output <output>",
+    "destination folder. Default is ./{image}_tiles"
+  )
+  .action(async (image, cmdObj) => {
     const pattern = cmdObj.pattern || "{z}/{x}_{y}.jpg";
+    const output =
+      cmdObj.output || `${path.basename(image, path.extname(image))}_tiles`;
     await Pyramid.create({ inPath: image, outPath: output, pattern });
   })
   .parse(process.argv);
