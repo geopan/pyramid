@@ -20,9 +20,9 @@ pyramid <image>
 
 ## Tradeoffs
 
-- The image tiling happens in parallel for a given level. This could be improved to both speed up the process as well as limiting the risk for spike in CPU consumption.
-- There is risk that for really big images, like orthophoto, the memory suffers with this approach and I would concider using node stream interface instead.
-- I would add unit testing. Currently a single one to illustrate how to deal with Jest.
+- The image tiling happens in parallel for a given level. This could be improved to both speed up the process as well as limit the risk for spike in CPU consumption.
+- There is a risk that for really big images, such as orthophoto, the memory suffers with this approach and I would consider using node stream interface instead.
+- I would add a lot more unit tests. Currently there is a single one to illustrate how to deal with Jest.
 
 #### Help
 
