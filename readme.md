@@ -9,7 +9,7 @@ Generate tiles pyramid for an image.
 This assumes that Node.js has already been installed.
 
 ```shell
-npm update @geopan.io/pyramid -g
+npm install @geopan.io/pyramid -g
 ```
 
 ## Usage
