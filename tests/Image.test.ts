@@ -1,18 +1,11 @@
 import Image from '../src/utils/Image';
+import sharp from 'sharp'
 
 describe('Image', () => {
-  describe('isBiggerThanTile', () => {
-    it('should return true for default image', () => {
-      expect(Image.isBiggerThanTile('tests/img/cat.jpg')).toBe(true)
-    });
-    it('should return false for tile', () => {
-      expect(Image.isBiggerThanTile('tests/img/0_0.jpg')).toBe(false)
-    });
-  })
-
   describe('maxZoom', () => {
-    it('should return 3 for cat img', () => {
-      expect(Image.maxZoom('tests/img/cat.jpg')).toEqual(3)
+    it('should return 3 for cat img', async () => {
+      const { width=0, height=0} = await sharp('tests/img/cat.jpg').metadata()
+      expect(Image.maxZoom(width, height)).toEqual(3)
     });
   })
 

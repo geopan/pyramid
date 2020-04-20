@@ -1,6 +1,6 @@
 {
   "name": "@geopan.io/pyramid",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,16 +17,14 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^5.0.0",
-    "image-size": "^0.8.3",
     "mkdirp": "^1.0.4",
-    "rimraf": "^3.0.2"
+    "sharp": "^0.25.2"
   },
   "devDependencies": {
-    "@types/image-size": "^0.8.0",
     "@types/jest": "^25.2.1",
     "@types/mkdirp": "^1.0.0",
     "@types/node": "^13.11.1",
-    "@types/rimraf": "^3.0.0",
+    "@types/sharp": "^0.24.0",
     "jest": "^25.3.0",
     "nodemon": "^2.0.3",
     "ts-jest": "^25.3.1",

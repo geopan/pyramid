@@ -1,36 +1,24 @@
-import mkdirp from "mkdirp"
-import tiler, { PyramidOptions } from "./Tiler"
-import rimraf from "rimraf"
+import tiler, { PyramidOptions } from "./Tiler";
+import sharp from "sharp";
+import { Image } from "../utils";
 
 const create = async (options: PyramidOptions) => {
-
-  const tileSize = options.tileSize || 256;
-  const tmpDir = options.tmpDir || process.env.TMPDIR || "/tmp";
-  const tempDir = `${tmpDir}/pyramid_tiler_${process.pid}`;
+  const { tileSize = 256, inPath } = options;
 
   try {
+    const image = await sharp(inPath).toBuffer();
 
-    await mkdirp(tempDir)
+    const { width = 0, height = 0 } = await sharp(image).metadata();
 
-    await tiler.createLevel(
-      {
-        ...options,
-        tileSize,
-        zoom: 0,
-        tmpDir,
-        tempDir,
-        quality: options.quality || 100
-      }
-    )
-
+    await tiler.createLevel({
+      ...options,
+      image,
+      tileSize,
+      zoom: Image.maxZoom(width, height, tileSize),
+    });
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-
-  rimraf(tempDir, (err: Error) => {
-    if (err) { console.error(err) }
-  });
-
 };
 
-export default { create }
+export default { create };

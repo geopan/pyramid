@@ -1,64 +1,97 @@
-import { execSync } from "child_process"
-import path from "path"
-import fs from "fs"
+import path from "path";
 import mkdirp from "mkdirp";
-
-import { Image, Pattern } from '../utils'
+import sharp from "sharp";
 
 export interface PyramidOptions {
   inPath: string;
   outPath: string;
-  pattern: string;
   tileSize?: number;
-  tmpDir?: string;
-  tempDir?: string;
-  quality?: number;
 }
 
-export interface TilerOptions extends PyramidOptions {
-  zoom: number,
-  zoomToDisplay?: number;
+export interface LevelOptions extends PyramidOptions {
+  image: Buffer;
+  zoom: number;
 }
 
-// create tiles for a given image at a given zoom level
-async function createTiles(options: TilerOptions): Promise<void> {
-
-  const { inPath, outPath, pattern, zoom, tileSize, quality } = options
-  const { ext, filename, pathname } = Pattern.decompose(pattern, zoom, tileSize)
-
-  await mkdirp(outPath + path.sep + pathname)
-
-  const cmd = `convert ${inPath} -crop ${tileSize}x${tileSize} -set filename:tile "${filename}" -quality ${quality} +repage +adjoin "${outPath}/%[filename:tile]${ext}"`;
-
-  execSync(cmd);
-
+export interface TilerOptions extends LevelOptions {
+  width: number;
+  height: number;
+  format: string;
+  tileSize: number;
 }
 
 // create each zoom level for an image
-async function createLevel(options: TilerOptions): Promise<void> {
+async function createLevel(options: LevelOptions): Promise<void> {
+  const { image, outPath, tileSize = 256, zoom } = options;
 
-  const { tempDir, zoom, inPath, tileSize = 256, quality } = options
+  const { width = 0, height = 0, format = "jpg" } = await sharp(
+    image
+  ).metadata();
 
-  const zoomToDisplay = options.zoomToDisplay || Image.maxZoom(options.inPath, tileSize);
+  let dir = `${outPath}${path.sep}${zoom}`;
 
-  const inPathMpc = `${tempDir}/temp_level_${zoom}.mpc`;
+  await mkdirp(dir);
 
-  execSync(`convert ${inPath} ${inPathMpc}`);
+  await tileImage({
+    ...options,
+    zoom,
+    outPath: dir,
+    tileSize,
+    width,
+    height,
+    format,
+  });
 
-  await createTiles({ ...options, inPath: inPathMpc, zoom: zoomToDisplay })
+  const newLevel = await sharp(image)
+    .resize(Math.round(width * 0.5))
+    .toBuffer();
 
-  if (Image.isBiggerThanTile(inPath, tileSize)) {
-
-    const newInPath = `${tempDir}/temp_level_${zoom}.png`;
-
-    execSync(`convert ${inPathMpc} -resize 50% -quality ${quality} ${newInPath}`);
-    fs.unlinkSync(inPathMpc);
-    return createLevel({ ...options, inPath: newInPath, zoom: zoom + 1, zoomToDisplay: zoomToDisplay - 1 });
-
+  if (height > tileSize || width > tileSize) {
+    createLevel({ ...options, image: newLevel, zoom: zoom - 1 });
   } else {
-    fs.unlinkSync(inPathMpc);
+    dir = `${outPath}${path.sep}${zoom}`;
+    await sharp(image).toFile(`${dir}${path.sep}${0}_${0}.${format}`);
   }
-
 }
 
-export default { createLevel, createTiles }
+// create all tiles for a given zoom level
+async function tileImage(options: TilerOptions): Promise<void> {
+  const { image, tileSize, width, height, format, outPath } = options;
+
+  const rows = width / tileSize;
+  const columns = height / tileSize;
+
+  const cursor = { x: 0, y: 0 };
+  const tile = { h: tileSize, w: tileSize };
+
+  const promises = [];
+
+  for (let r = 0; r < rows; r++) {
+    tile.w = width - cursor.x >= tileSize ? tileSize : width - cursor.x;
+
+    cursor.y = 0;
+
+    for (let c = 0; c < columns; c++) {
+      tile.h = height - cursor.y >= tileSize ? tileSize : height - cursor.y;
+
+      promises.push(
+        sharp(image)
+          .extract({
+            left: cursor.x,
+            top: cursor.y,
+            width: tile.w,
+            height: tile.h,
+          })
+          .toFile(`${outPath}${path.sep}${r}_${c}.${format}`)
+      );
+
+      cursor.y += tileSize;
+    }
+
+    cursor.x += tileSize;
+  }
+
+  await Promise.all(promises);
+}
+
+export default { createLevel, tileImage };
